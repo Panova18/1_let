@@ -3,51 +3,30 @@
 //@return C-строка  согласно варианту
 // Панова Дарья ИУ10-16 Вариант 2
 #include <iostream>
+#include <assert.h>
 
-
-// Ошибки по стилю кода:
-// Правлю первый и последний раз
-// 1. Необходимо использовать camelCase либо under_score
-// 2. Необходимо использовать const там, где это возможно
-// 3. Добавляйте в .gitignore файлы, которые не должны попадать в репозиторий к примеру файлы сборки
-
-// Можем собраться и подумать
-// get_int_lengh - название функции не соответствует ее действию -> правильно length
-// Нужна ли нам эта функция вообще
-// Максимальное int число 2147483647 -> 10 символов, следовательно мы можем выделить 11 + 3 символов
-// 10 для числа 1 для знака два для 0x и один для \0
-// Зато сложность нашего алгоритма будет O(n) где n - длина числа
-// Мы же проходим по числу дважды, следовательно сложность O(2n), что конечно в глобальном смысле роли не играет
-// Но все же
-
-// Необходимо добавить в .gitignore файлы сборки
-// Необходимо написать тесты используя assert()
-
-// хау ту юз ассерт ?
-// #include <cassert>
-// assert(1 == 2);
 
 using namespace std;
 
-int get_int_lenght(int num) { // length ? -> get_int_length ? глицин ?
+int lenght(int num) { 
     int result = 0;
-    if (num == 0) { // <- стиль кода
+    if (num == 0) { 
         return 1;
     }
 
-    while (num != 0) {// <- стиль кода
-        result += 1;// <- стиль кода
+    while (num != 0) {
+        result += 1;
         num /= 10;
-// <- стиль кода
+
     }
     return result;
 }
 
 
-char *intToDec(int num) {// <- стиль кода
+char *intToDec(int num) {
     int two_or_one;
     bool is_negative;
-    if (num < 0) {// <- стиль кода
+    if (num < 0) {
         two_or_one = 2;
         is_negative = true;
         num = -num;
@@ -57,21 +36,21 @@ char *intToDec(int num) {// <- стиль кода
         is_negative = false;
     }
     int total_lenght = 3;
-    if (is_negative) {// <- стиль кода
+    if (is_negative) {
         total_lenght += 1;
 
     }
 
-    total_lenght += get_int_lenght(num);
-    char *result = new char[total_lenght];// динамическая память new // <- стиль кода
+    total_lenght += lenght(num);
+    char *result = new char[total_lenght];
 
-    for (int index = total_lenght - 2; index > two_or_one; --index) {// <- стиль кода
+    for (int index = total_lenght - 2; index > two_or_one; --index) {
         int rem = num % 10;
-        char symdol = rem + '0';// <- стиль кода
+        char symdol = rem + '0';
         result[index] = symdol;
-        num /= 10;// <- стиль кода
+        num /= 10;
     }
-    if (is_negative) {// <- стиль кода
+    if (is_negative) {
         result[0] = '-';
         result[1] = '0';
         result[2] = 'd';
@@ -84,8 +63,19 @@ char *intToDec(int num) {// <- стиль кода
     return result;
 }
 
+bool cStringsEqual(const char *left, const char *right) {
+    while (*left != '\0' && *right != '\0') {
+        if (*left != *right) {
+            return false;
+        }
+        left++;
+        right++;
+    }
+    return *left == *right;
+}
+
 int main() {
-    int n;
-    cin >> n;
-    cout << intToDec(n) << endl;
+    assert(cStringsEqual(intToDec(123), "0d123"));
+    assert(cStringsEqual(intToDec(-123), "-0d123"));
+    assert(cStringsEqual(intToDec(0), "0d0"));
 }
